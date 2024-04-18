@@ -3,23 +3,25 @@ package com.appsdeveloperblog.app.ws.ui.controller;
 import com.appsdeveloperblog.app.ws.model.request.UpdateUserDetailRequestModel;
 import com.appsdeveloperblog.app.ws.model.request.UserDetailsRequestModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
+import com.appsdeveloperblog.app.ws.userservice.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.AssertFalse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("users")
 public class UserController {
 
     Map<String, UserRest> users;
+
+    @Autowired
+    UserService user_service;
 
     @GetMapping(path = {"/{userID}"}, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserRest> getUsers(@PathVariable String userID) {
@@ -41,14 +43,7 @@ public class UserController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
-        UserRest user = new UserRest();
-        user.setEmail(userDetails.getEmail());
-        user.setFirstName(userDetails.getFirstName());
-        user.setLastName(userDetails.getLastName());
-        String userID = UUID.randomUUID().toString();
-        user.setUserID(userID);
-        if (users == null) users = new HashMap<>();
-        users.put(userID, user);
+        UserRest user = user_service.createUser(userDetails);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
