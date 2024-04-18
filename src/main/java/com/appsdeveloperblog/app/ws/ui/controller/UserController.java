@@ -1,14 +1,26 @@
 package com.appsdeveloperblog.app.ws.ui.controller;
 
+import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.*;
 
 @RestController
 @RequestMapping("users")
 public class UserController {
 
-    @GetMapping(path = {"/{userID}"})
-    public String getUsers(@PathVariable String userID) {
-        return "Get Users Called" + userID;
+    @GetMapping(path = {"/{userID}"}, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<UserRest> getUsers(@PathVariable String userID) {
+        UserRest user = new UserRest();
+        user.setUserID(userID);
+        user.setEmail("email@email.com");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        return new ResponseEntity<UserRest>(user, HttpStatus.OK);
     }
 
     @GetMapping
