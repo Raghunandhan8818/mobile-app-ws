@@ -61,9 +61,10 @@ public class UserController {
         return new ResponseEntity<>(storedUser, HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "Delete User Called";
+    @DeleteMapping(path = "/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+        users.remove(userId);
+        return ResponseEntity.noContent().build();
     }
 
 }
